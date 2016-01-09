@@ -1,10 +1,10 @@
 function resetGame(state, world) {
 	state.shapes = [];
-	state.unconfirmedCircless = {};
+	state.unconfirmedShapess = {};
 	state.scores = {};
-	state.newCircle = null;
-	state.newCircleText = null;
-	state.scoreCircles = [];
+	state.newShape = null;
+	state.newShapeText = null;
+	state.scoreShapes = [];
 	state.readyToPlay = true;
 	state.playing = true;
 	state.shrinkCount = 0;

@@ -1,4 +1,4 @@
-function generateSpriteForCircle(world, s) {
+function generateSpriteForShape(world, s) {
 	var w = world.renderer.view.width, h = world.renderer.view.height;
 	var key = w + '_' + h + '_' + s.color;
 	var texture = world.textures[key];

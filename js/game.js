@@ -15,7 +15,7 @@ function fingerboss() {
 		computerPlayer(state, world);
 		var estimatedServerT = getEstimatedServerT(world);
 		state.shapes.forEach(function (s1) {
-			var y = getMovedCircleY(world, s1, estimatedServerT);
+			var y = getMovedShapeY(world, s1, estimatedServerT);
 			s1.sprite.position.y = y * world.renderer.view.height;
 			var expectedWidth = s1.size * world.renderer.view.width;
 			var expectedHeight = s1.size * world.renderer.view.height;
@@ -32,34 +32,34 @@ function fingerboss() {
 				}).to(s1.sprite, 0.3, {ease: Power2.easeOut, width: expectedWidth, height: expectedHeight});
 			}
 		});
-		if (state.newCircle) {
-			state.newCircle.sprite.position.x = state.newCircle.x * world.renderer.view.width;
-			state.newCircle.sprite.position.y = state.newCircle.y * world.renderer.view.height;
-			state.newCircle.sprite.width = state.newCircle.size * world.renderer.view.width;
-			state.newCircle.sprite.height = state.newCircle.size * world.renderer.view.height;
-			if (!state.newCircleText) {
-				state.newCircleText = getText(world, '1', world.color, getFontSize(world, 30));
-				state.newCircleText.anchor.x = 0.5;
-				state.newCircleText.anchor.y = 1;
-				world.stage.addChild(state.newCircleText);
+		if (state.newShape) {
+			state.newShape.sprite.position.x = state.newShape.x * world.renderer.view.width;
+			state.newShape.sprite.position.y = state.newShape.y * world.renderer.view.height;
+			state.newShape.sprite.width = state.newShape.size * world.renderer.view.width;
+			state.newShape.sprite.height = state.newShape.size * world.renderer.view.height;
+			if (!state.newShapeText) {
+				state.newShapeText = getText(world, '1', world.color, getFontSize(world, 30));
+				state.newShapeText.anchor.x = 0.5;
+				state.newShapeText.anchor.y = 1;
+				world.stage.addChild(state.newShapeText);
 			}
-			state.newCircleText.visible = true;
-			var score = Math.ceil(state.newCircle.size * SCORE_FACTOR);
-			state.newCircleText.text = score;
-			state.newCircleText.position.x = state.newCircle.x * world.renderer.view.width;
-			state.newCircleText.position.y = state.newCircle.y * world.renderer.view.height -
-				Math.max(state.newCircle.size / 2, 0.07) * world.renderer.view.height;
-		} else if (state.newCircleText) {
-			state.newCircleText.visible = false;
+			state.newShapeText.visible = true;
+			var score = Math.ceil(state.newShape.size * SCORE_FACTOR);
+			state.newShapeText.text = score;
+			state.newShapeText.position.x = state.newShape.x * world.renderer.view.width;
+			state.newShapeText.position.y = state.newShape.y * world.renderer.view.height -
+				Math.max(state.newShape.size / 2, 0.07) * world.renderer.view.height;
+		} else if (state.newShapeText) {
+			state.newShapeText.visible = false;
 		}
 		//score state.shapes out of frame (unverified by server, they might get killed)
 		state.shapes.forEach(function (s1) {
-			var y = getMovedCircleY(world, s1, estimatedServerT);
+			var y = getMovedShapeY(world, s1, estimatedServerT);
 			if (!s1.unverifiedScore && (y < -s1.size / 2 || y > 1 + s1.size / 2)) {
 				state.scores[s1.color] = state.scores[s1.color] || {value: 0, level: s1.level};
 				state.scores[s1.color].value += s1.size;
 				s1.unverifiedScore = s1.size;
-				state.scoreCircles.push(s1);
+				state.scoreShapes.push(s1);
 			}
 		});
 		// state.scores
@@ -101,10 +101,10 @@ function fingerboss() {
 				s.text.position.x = 20 + s.levelText.width;
 			});
 		//new points
-		state.scoreCircles.forEach(function (s) {
+		state.scoreShapes.forEach(function (s) {
 			var scoreSize = s.size === s.unverifiedScore ? s.size : s.size - (s.unverifiedScore || 0);
 			if (!scoreSize) {
-				killCircleSprite(world.stage, s.sprite);
+				killShapeSprite(world.stage, s.sprite);
 				return;
 			}
 			var styleColor = '#' + ('000000' + parseInt(s.color, 10).toString(16)).slice(-6);
@@ -121,7 +121,7 @@ function fingerboss() {
 			var h = Math.ceil(text.height / 2);
 			var w = Math.ceil(text.width / 2);
 			var x = s.x * world.renderer.view.width;
-			var y = getMovedCircleY(world, s, estimatedServerT);
+			var y = getMovedShapeY(world, s, estimatedServerT);
 			if (y > 1) {
 				y = world.renderer.view.height - h;
 				world.sounds.crash1(scoreSize);
@@ -134,7 +134,7 @@ function fingerboss() {
 				y *= world.renderer.view.height;
 				world.sounds.crash2(Math.min(scoreSize * 4, 1));
 				setFire(world.stage, s);
-				killCircleSprite(world.stage, s.sprite);
+				killShapeSprite(world.stage, s.sprite);
 			}
 			text.position.y = Math.min(Math.max(y, h), world.renderer.view.height - h);
 			text.position.x = Math.min(Math.max(x, w), world.renderer.view.width - w);
@@ -149,12 +149,12 @@ function fingerboss() {
 					}
 				}
 			}).to(text, 2.5, {alpha: 0, width: text.width * 1.2, height: text.height * 1.2});
-			var targetY = getMovedCircleY(world, s, estimatedServerT) > 1 ? text.position.y - h : text.position.y + h;
+			var targetY = getMovedShapeY(world, s, estimatedServerT) > 1 ? text.position.y - h : text.position.y + h;
 			text.tl2 = new TimelineMax({
 				autoRemoveChildren: true
 			}).to(text.position, 2.5, {y: targetY});
 		});
-		state.scoreCircles = [];
+		state.scoreShapes = [];
 		//check for winner
 		var winner = Object.keys(state.scores)
 			.map(function (key) {

@@ -38,7 +38,7 @@ var fire = {
 	"maxParticles": 500,
 	"addAtBack": true,
 	"spawnType": "shape",
-	"spawnCircle": {
+	"spawnShape": {
 		"x": 0,
 		"y": 0,
 		"r": 10

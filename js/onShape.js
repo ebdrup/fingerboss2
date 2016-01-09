@@ -1,16 +1,16 @@
-function onCircle(state, world, s) {
+function onShape(state, world, s) {
 	if (!state.playing) {
 		return;
 	}
-	world.sounds.newCircle();
+	world.sounds.newShape();
 	//remove unconfirmed shape
-	s.sprite = generateSpriteForCircle(world, s);
+	s.sprite = generateSpriteForShape(world, s);
 	world.stage.addChild(s.sprite);
 	state.shapes.push(s);
-	var uc = state.unconfirmedCircless[s.id];
+	var uc = state.unconfirmedShapess[s.id];
 	if (uc) {
 		world.stage.removeChild(uc.sprite);
-		delete state.unconfirmedCircless[s.id]
+		delete state.unconfirmedShapess[s.id]
 	}
 	var t = s.t;
 	//same color collision detection
@@ -31,9 +31,9 @@ function onCircle(state, world, s) {
 			if (s1.size <= KILL_SIZE) {
 				anyKill = true;
 				indexesToRemove.push(i);
-				//scoreCircle for kill
+				//scoreShape for kill
 				state.scores[s.color] = state.scores[s.color] || {value: 0, level: s.level};
-				var scoreCircle = {
+				var scoreShape = {
 					t: s.t,
 					x: s.x,
 					y: s.y,
@@ -41,8 +41,8 @@ function onCircle(state, world, s) {
 					color: s.color,
 					sprite: s1.sprite
 				};
-				state.scores[s.color].value += scoreCircle.size;
-				state.scoreCircles.push(scoreCircle);
+				state.scores[s.color].value += scoreShape.size;
+				state.scoreShapes.push(scoreShape);
 				if (world.color === s.color) {
 					state.killCount++;
 					if (state.killCount === 1 && world.level === 0) {
@@ -53,7 +53,7 @@ function onCircle(state, world, s) {
 			if (s.size <= KILL_SIZE) {
 				state.shapes.pop(); // remove s
 				s.size = 0;
-				state.scoreCircles.push(s);
+				state.scoreShapes.push(s);
 				break;
 			}
 		}
@@ -79,13 +79,13 @@ function onCircle(state, world, s) {
 	state.shapes = state.shapes.filter(Boolean);
 	//remove & score shapes out of frame
 	state.shapes.forEach(function (s1, i) {
-		var y = getMovedCircleY(world, s1, s.t);
+		var y = getMovedShapeY(world, s1, s.t);
 		if (y < -s1.size || y > 1 + s1.size) {
 			state.scores[s1.color] = state.scores[s1.color] || {value: 0};
 			var scoreToAdd = s1.size - (s1.unverifiedScore || 0);
 			state.scores[s1.color].value += scoreToAdd;
 			if (scoreToAdd > 0.0000001) {
-				state.scoreCircles.push(s1);
+				state.scoreShapes.push(s1);
 			}
 			delete state.shapes[i];
 			world.stage.removeChild(s1.sprite);

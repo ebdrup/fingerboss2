@@ -29,25 +29,11 @@ io.on('connection', function (socket) {
 		t: Date.now(),
 		velocity: 0.0002
 	});
-	socket.on('circle', function (c) {
+	socket.on('shape', function (c) {
 		socketLastSeen[socket.id] = Date.now();
 		c.color = color;
 		c.t = Date.now();
-		broadcast('circle', c);
-		checkPlayerCount();
-	});
-	socket.on('square', function (c) {
-		socketLastSeen[socket.id] = Date.now();
-		c.color = color;
-		c.t = Date.now();
-		broadcast('square', c);
-		checkPlayerCount();
-	});
-	socket.on('triangle', function (c) {
-		socketLastSeen[socket.id] = Date.now();
-		c.color = color;
-		c.t = Date.now();
-		broadcast('triangle', c);
+		broadcast('shape', c);
 		checkPlayerCount();
 	});
 	socket.on('pong', function () {
@@ -70,7 +56,7 @@ function checkPlayerCount() {
 		}
 	});
 	var players = Object.keys(socketLastSeen).length;
-	io.sockets.sockets.forEach(function (socket) {
+	io.sockets.clients().forEach(function (socket) {
 		var shouldEmit = (players === 1 && socketLastSeen[socket.id]) || players > 1;
 		var isNonEmittedCount = !socket.lastPlayerCount || socket.lastPlayerCount !== players;
 		if (shouldEmit && isNonEmittedCount) {

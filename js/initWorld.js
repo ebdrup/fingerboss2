@@ -26,7 +26,7 @@ function initWorld(state, world) {
 		world.background.height = world.renderer.view.height;
 		state.shapes.forEach(function (s) {
 			world.stage.removeChild(s.sprite);
-			s.sprite = generateSpriteForCircle(world, s);
+			s.sprite = generateSpriteForShape(world, s);
 			world.stage.addChild(s.sprite);
 		});
 	};
@@ -41,13 +41,13 @@ function initWorld(state, world) {
 		world.dClocks.push(world.dClock);
 	});
 
-	world.socket.on('shape', onCircle.bind(null, state, world));
-	world.socket.on('shape', onCircleTime);
+	world.socket.on('shape', onShape.bind(null, state, world));
+	world.socket.on('shape', onShapeTime);
 	world.socket.on('players', onPlayers);
 	world.socket.on('ping', onPing);
 	return;
 
-	function onCircleTime(s) {
+	function onShapeTime(s) {
 		// find median latency
 		if (s.owner === world.id) {
 			world.latencies.push(Date.now() - s.localTime);

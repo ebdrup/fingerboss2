@@ -17,30 +17,30 @@ function getInteraction(state, world) {
 
 	function onDown(e) {
 		world.lastInteraction = Date.now();
-		if (state.newCircle || !state.readyToPlay) {
+		if (state.newShape || !state.readyToPlay) {
 			return;
 		}
 		if (!state.playing && state.readyToPlay) {
 			resetGame(state, world);
 		}
-		state.newCircle = {
+		state.newShape = {
 			id: Math.random() + '_' + Date.now(),
 			x: getX(e),
 			y: getY(e),
 			size: START_SIZE,
 			color: world.color
 		};
-		state.newCircle.tl = new TimelineMax({
+		state.newShape.tl = new TimelineMax({
 			autoRemoveChildren: true,
 			onComplete: function () {
 				onUp();
 				help(state, world, 'Auto release');
 			}
-		}).to(state.newCircle, GROW_TIME, {size: END_SIZE, ease: Power1.easeOut});
-		state.newCircle.sprite = generateSpriteForCircle(world, state.newCircle);
-		state.newCircle.sprite.alpha = UNCONFIRMED_ALPHA;
-		world.stage.addChild(state.newCircle.sprite);
-		newCircleEmitter(world, state);
+		}).to(state.newShape, GROW_TIME, {size: END_SIZE, ease: Power1.easeOut});
+		state.newShape.sprite = generateSpriteForShape(world, state.newShape);
+		state.newShape.sprite.alpha = UNCONFIRMED_ALPHA;
+		world.stage.addChild(state.newShape.sprite);
+		newShapeEmitter(world, state);
 	}
 
 	function getX(e) {
@@ -52,41 +52,41 @@ function getInteraction(state, world) {
 	}
 
 	function onMove(e) {
-		if (state.newCircle) {
-			state.newCircle.x = getX(e);
-			state.newCircle.y = getY(e);
+		if (state.newShape) {
+			state.newShape.x = getX(e);
+			state.newShape.y = getY(e);
 		}
 	}
 
 	function onUp() {
 		world.lastInteraction = Date.now();
 		var shape;
-		if (state.newCircle) {
-			if (state.newCircle.tl) {
-				state.newCircle.tl.kill();
-				delete state.newCircle.tl;
+		if (state.newShape) {
+			if (state.newShape.tl) {
+				state.newShape.tl.kill();
+				delete state.newShape.tl;
 			}
-			world.stage.removeChild(state.newCircle.sprite);
-			delete state.newCircle.sprite;
-			world.stage.removeChild(state.newCircle.innerSprite);
-			delete state.newCircle.innerSprite;
-			if (state.newCircle.size > MIN_SIZE) {
+			world.stage.removeChild(state.newShape.sprite);
+			delete state.newShape.sprite;
+			world.stage.removeChild(state.newShape.innerSprite);
+			delete state.newShape.innerSprite;
+			if (state.newShape.size > MIN_SIZE) {
 				shape = {
 					owner: world.id,
-					id: state.newCircle.id,
-					x: state.newCircle.x,
-					y: state.newCircle.y,
-					size: state.newCircle.size,
+					id: state.newShape.id,
+					x: state.newShape.x,
+					y: state.newShape.y,
+					size: state.newShape.size,
 					localTime: Date.now(),
 					level: world.level
 				};
-				state.newCircle.sprite = generateSpriteForCircle(world, state.newCircle);
-				state.newCircle.sprite.visible = false;
-				state.newCircle.sprite.alpha = UNCONFIRMED_ALPHA;
-				state.unconfirmedCircless[state.newCircle.id] = state.newCircle;
-				world.stage.addChild(state.newCircle.sprite)
+				state.newShape.sprite = generateSpriteForShape(world, state.newShape);
+				state.newShape.sprite.visible = false;
+				state.newShape.sprite.alpha = UNCONFIRMED_ALPHA;
+				state.unconfirmedShapess[state.newShape.id] = state.newShape;
+				world.stage.addChild(state.newShape.sprite)
 			}
-			state.newCircle = null;
+			state.newShape = null;
 			if (shape) {
 				var t = getEstimatedServerT(world);
 				for (var i = 0; i < state.shapes.length; i++) {
@@ -100,8 +100,8 @@ function getInteraction(state, world) {
 				} else {
 					shape.color = world.color;
 					shape.t = getEstimatedServerT(world);
-					onCircle(state, world, shape);
-					state.lastCircle = shape;
+					onShape(state, world, shape);
+					state.lastShape = shape;
 				}
 			}
 		}

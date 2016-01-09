@@ -1,4 +1,4 @@
-function killCircleSprite(stage, sprite) {
+function killShapeSprite(stage, sprite) {
 	if (sprite.tl) {
 		sprite.tl.kill();
 		delete sprite.tl;
