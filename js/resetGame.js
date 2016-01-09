@@ -1,6 +1,6 @@
 function resetGame(state, world) {
 	state.shapes = [];
-	state.unconfirmedShapess = {};
+	state.unconfirmedShapes = {};
 	state.scores = {};
 	state.newShape = null;
 	state.newShapeText = null;
@@ -9,6 +9,9 @@ function resetGame(state, world) {
 	state.playing = true;
 	state.shrinkCount = 0;
 	state.killCount = 0;
+	if(state.timeout){
+		clearTimeout(state.timeout);
+	}
 	TweenMax.killAll();
 	if (world.stage) {
 		for (var i = world.stage.children.length - 1; i >= 0; i--) {

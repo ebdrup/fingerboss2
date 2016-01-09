@@ -18,6 +18,7 @@ function computerPlayer(state, world) {
 	}
 	var shape = {
 		id: Math.random() + '_' + Date.now(),
+		type: Math.round(Math.random()*3),
 		color: 0xff9500,
 		x: x,
 		y: y,

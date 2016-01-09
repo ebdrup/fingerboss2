@@ -7,10 +7,10 @@ function onShape(state, world, s) {
 	s.sprite = generateSpriteForShape(world, s);
 	world.stage.addChild(s.sprite);
 	state.shapes.push(s);
-	var uc = state.unconfirmedShapess[s.id];
+	var uc = state.unconfirmedShapes[s.id];
 	if (uc) {
 		world.stage.removeChild(uc.sprite);
-		delete state.unconfirmedShapess[s.id]
+		delete state.unconfirmedShapes[s.id]
 	}
 	var t = s.t;
 	//same color collision detection
