@@ -37,7 +37,7 @@ var fire = {
 	"emitterLifetime": 0.15,
 	"maxParticles": 500,
 	"addAtBack": true,
-	"spawnType": "circle",
+	"spawnType": "shape",
 	"spawnCircle": {
 		"x": 0,
 		"y": 0,
@@ -46,16 +46,16 @@ var fire = {
 };
 var fireTexture = PIXI.Texture.fromImage('fire.png');
 var particleTexture = PIXI.Texture.fromImage('particle.png');
-function setFire(container, c) {
-	var sprite = c.sprite;
+function setFire(container, s) {
+	var sprite = s.sprite;
 	var conf = JSON.parse(JSON.stringify(fire));
-	var factor = c.size * 8;
+	var factor = s.size * 8;
 	conf.scale.start *= factor;
 	conf.scale.end *= factor;
 	conf.speed.start *= factor / 2;
 	conf.speed.end *= factor / 2;
-	conf.color.start = '#' + ('000000' + parseInt(c.color, 10).toString(16)).slice(-6);
-	conf.color.end = '#' + ('000000' + parseInt(c.sprite.color, 10).toString(16)).slice(-6);
+	conf.color.start = '#' + ('000000' + parseInt(s.color, 10).toString(16)).slice(-6);
+	conf.color.end = '#' + ('000000' + parseInt(s.sprite.color, 10).toString(16)).slice(-6);
 	conf.pos = sprite.position;
 	var emitter = new cloudkid.Emitter(
 		container,

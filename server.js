@@ -36,6 +36,20 @@ io.on('connection', function (socket) {
 		broadcast('circle', c);
 		checkPlayerCount();
 	});
+	socket.on('square', function (c) {
+		socketLastSeen[socket.id] = Date.now();
+		c.color = color;
+		c.t = Date.now();
+		broadcast('square', c);
+		checkPlayerCount();
+	});
+	socket.on('triangle', function (c) {
+		socketLastSeen[socket.id] = Date.now();
+		c.color = color;
+		c.t = Date.now();
+		broadcast('triangle', c);
+		checkPlayerCount();
+	});
 	socket.on('pong', function () {
 		socketLastSeen[socket.id] = Date.now();
 		checkPlayerCount();

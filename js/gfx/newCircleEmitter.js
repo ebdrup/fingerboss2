@@ -41,7 +41,7 @@ var newCircleEmitterConf = {
 		"y": 0
 	},
 	"addAtBack": false,
-	"spawnType": "circle",
+	"spawnType": "shape",
 	"spawnCircle": {
 		"x": 0,
 		"y": 0,

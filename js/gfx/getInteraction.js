@@ -60,7 +60,7 @@ function getInteraction(state, world) {
 
 	function onUp() {
 		world.lastInteraction = Date.now();
-		var circle;
+		var shape;
 		if (state.newCircle) {
 			if (state.newCircle.tl) {
 				state.newCircle.tl.kill();
@@ -71,7 +71,7 @@ function getInteraction(state, world) {
 			world.stage.removeChild(state.newCircle.innerSprite);
 			delete state.newCircle.innerSprite;
 			if (state.newCircle.size > MIN_SIZE) {
-				circle = {
+				shape = {
 					owner: world.id,
 					id: state.newCircle.id,
 					x: state.newCircle.x,
@@ -87,21 +87,21 @@ function getInteraction(state, world) {
 				world.stage.addChild(state.newCircle.sprite)
 			}
 			state.newCircle = null;
-			if (circle) {
+			if (shape) {
 				var t = getEstimatedServerT(world);
-				for (var i = 0; i < state.circles.length; i++) {
-					var c1 = state.circles[i];
-					if (c1.color !== world.color && isColliding(world, circle, c1)) {
+				for (var i = 0; i < state.shapes.length; i++) {
+					var s1 = state.shapes[i];
+					if (s1.color !== world.color && isColliding(world, shape, s1)) {
 
 					}
 				}
 				if (world.players > 1) {
-					world.socket.emit('circle', circle);
+					world.socket.emit('shape', shape);
 				} else {
-					circle.color = world.color;
-					circle.t = getEstimatedServerT(world);
-					onCircle(state, world, circle);
-					state.lastCircle = circle;
+					shape.color = world.color;
+					shape.t = getEstimatedServerT(world);
+					onCircle(state, world, shape);
+					state.lastCircle = shape;
 				}
 			}
 		}

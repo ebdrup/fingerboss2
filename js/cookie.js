@@ -13,9 +13,9 @@ function readCookie(name) {
 	var nameEQ = name + "=";
 	var ca = document.cookie.split(';');
 	for (var i = 0; i < ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+		var s = ca[i];
+		while (s.charAt(0) == ' ') s = s.substring(1, s.length);
+		if (s.indexOf(nameEQ) == 0) return s.substring(nameEQ.length, s.length);
 	}
 	return null;
 }

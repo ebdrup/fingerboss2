@@ -1,4 +1,4 @@
-function getMovedCircleY(world, c, t) {
-	var dt = c.t - t;
-	return c.y > 0.5 ? c.y + dt * world.velocity : c.y - dt * world.velocity;
+function getMovedCircleY(world, s, t) {
+	var dt = s.t - t;
+	return s.y > 0.5 ? s.y + dt * world.velocity : s.y - dt * world.velocity;
 }

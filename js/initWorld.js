@@ -24,10 +24,10 @@ function initWorld(state, world) {
 		world.renderer.resize(window.innerWidth, window.innerHeight);
 		world.background.width = world.renderer.view.width;
 		world.background.height = world.renderer.view.height;
-		state.circles.forEach(function (c) {
-			world.stage.removeChild(c.sprite);
-			c.sprite = generateSpriteForCircle(world, c);
-			world.stage.addChild(c.sprite);
+		state.shapes.forEach(function (s) {
+			world.stage.removeChild(s.sprite);
+			s.sprite = generateSpriteForCircle(world, s);
+			world.stage.addChild(s.sprite);
 		});
 	};
 	world.color = COLORS[Math.floor(Math.random() * COLORS.length)];
@@ -41,16 +41,16 @@ function initWorld(state, world) {
 		world.dClocks.push(world.dClock);
 	});
 
-	world.socket.on('circle', onCircle.bind(null, state, world));
-	world.socket.on('circle', onCircleTime);
+	world.socket.on('shape', onCircle.bind(null, state, world));
+	world.socket.on('shape', onCircleTime);
 	world.socket.on('players', onPlayers);
 	world.socket.on('ping', onPing);
 	return;
 
-	function onCircleTime(c) {
+	function onCircleTime(s) {
 		// find median latency
-		if (c.owner === world.id) {
-			world.latencies.push(Date.now() - c.localTime);
+		if (s.owner === world.id) {
+			world.latencies.push(Date.now() - s.localTime);
 			world.latencies.sort();
 			if (world.latencies.length === 600) {
 				world.latencies = world.latencies.slice(200, 400);
@@ -58,8 +58,8 @@ function initWorld(state, world) {
 			world.latency = world.latencies[Math.floor(world.latencies.length / 2)];
 		}
 		// find median clockDifference
-		if (c.owner === world.id) {
-			world.dClocks.push(Date.now() - c.t);
+		if (s.owner === world.id) {
+			world.dClocks.push(Date.now() - s.t);
 			world.dClocks.sort();
 			if (world.dClocks.length === 600) {
 				world.dClocks = world.dClocks.slice(200, 400);

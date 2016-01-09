@@ -42,4 +42,4 @@ I can be better at teaching them.
 - This is changing all the time as the game develops
 
 ## Winning
-- Score of 1000 decides the winner
+- Score of 100 decides the winner
