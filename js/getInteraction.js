@@ -32,7 +32,7 @@ function getInteraction(state, world) {
 				id: Math.random() + '_' + Date.now(),
 				x: getX(e),
 				y: getY(e),
-				size: 0.05,
+				size: SHAPE_SIZE,
 				color: world.color
 			};
 			state.newShape.sprite = generateSpriteForShape(world, state.newShape);
@@ -45,7 +45,7 @@ function getInteraction(state, world) {
 			state.newShape.sprite.alpha = UNCONFIRMED_ALPHA;
 			world.stage.addChild(state.newShape.sprite);
 		}
-		newShapeEmitter(world, state);
+		//newShapeEmitter(world, state);
 	}
 
 	function onUp() {
@@ -59,7 +59,7 @@ function getInteraction(state, world) {
 		if (state.timeout) {
 			clearTimeout(state.timeout);
 		}
-		state.timeout = setTimeout(commitShape, 300);
+		state.timeout = setTimeout(commitShape, CLICK_WAIT);
 	}
 
 	function getX(e) {

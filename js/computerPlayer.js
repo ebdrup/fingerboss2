@@ -22,7 +22,7 @@ function computerPlayer(state, world) {
 		color: 0xff9500,
 		x: x,
 		y: y,
-		size: s / 2
+		size: SHAPE_SIZE
 	};
 	if(!COMPUTER_VIA_SERVER) {
 		shape.t = getEstimatedServerT(world);

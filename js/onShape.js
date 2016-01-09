@@ -25,10 +25,7 @@ function onShape(state, world, s) {
 		}
 		if (isColliding(world, s, s1, t)) {
 			anyCollision = true;
-			var cSize = s.size;
-			s.size -= s1.size;
-			s1.size -= cSize;
-			if (s1.size <= KILL_SIZE) {
+			if (kills(s1.type, s.type)) {
 				anyKill = true;
 				indexesToRemove.push(i);
 				//scoreShape for kill
@@ -37,7 +34,7 @@ function onShape(state, world, s) {
 					t: s.t,
 					x: s.x,
 					y: s.y,
-					size: (s1.size + cSize) * KILL_SCORE_FACTOR,
+					size: s1.size,
 					color: s.color,
 					sprite: s1.sprite
 				};
@@ -50,23 +47,11 @@ function onShape(state, world, s) {
 					}
 				}
 			}
-			if (s.size <= KILL_SIZE) {
+			if (kills(s.type, s1.type)) {
 				state.shapes.pop(); // remove s
 				s.size = 0;
 				state.scoreShapes.push(s);
 				break;
-			}
-		}
-	}
-	if (anyCollision && !anyKill) {
-		world.sounds.shrink(0.04);
-		if (s.color === world.color) {
-			state.shrinkCount++;
-			if (world.level === 0 && (state.shrinkCount === 1 || state.shrinkCount === 10)) {
-				help(state, world, 'Try holding down longer');
-			}
-			if (world.level === 0 && (state.shrinkCount === 5 || state.shrinkCount === 15)) {
-				help(state, world, 'Make your shape bigger\nthan the one you hit');
 			}
 		}
 	}
@@ -93,6 +78,14 @@ function onShape(state, world, s) {
 	});
 	state.shapes = state.shapes.filter(Boolean);
 	return;
+
+	function kills(type1, type2){
+		return !!{
+			'0':{ '1': true},
+			'1':{ '2': true},
+			'2':{ '0': true},
+		}[type1][type2];
+	}
 
 	function merge(state, s1, t) {
 		for (var i = 0; i < state.shapes.length; i++) {
