@@ -16,12 +16,17 @@ function computerPlayer(state, world) {
 		x = Math.random();
 		y = Math.random();
 	}
-	onShape(state, world, {
+	var shape = {
 		id: Math.random() + '_' + Date.now(),
-		t: getEstimatedServerT(world),
 		color: 0xff9500,
 		x: x,
 		y: y,
-		size: s/2
-	});
+		size: s / 2
+	};
+	if(!COMPUTER_VIA_SERVER) {
+		shape.t = getEstimatedServerT(world);
+		onShape(state, world, shape);
+	} else {
+		world.socket.emit('shape', shape);
+	}
 }

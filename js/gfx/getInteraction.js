@@ -88,14 +88,13 @@ function getInteraction(state, world) {
 			}
 			state.newShape = null;
 			if (shape) {
-				var t = getEstimatedServerT(world);
 				for (var i = 0; i < state.shapes.length; i++) {
 					var s1 = state.shapes[i];
 					if (s1.color !== world.color && isColliding(world, shape, s1)) {
 
 					}
 				}
-				if (world.players > 1) {
+				if (world.players > 1 && !COMPUTER_VIA_SERVER) {
 					world.socket.emit('shape', shape);
 				} else {
 					shape.color = world.color;

@@ -31,7 +31,9 @@ io.on('connection', function (socket) {
 	});
 	socket.on('shape', function (c) {
 		socketLastSeen[socket.id] = Date.now();
-		c.color = color;
+		if(c.color !== 0xff9500){
+			c.color = color;
+		}
 		c.t = Date.now();
 		broadcast('shape', c);
 		checkPlayerCount();
@@ -56,38 +58,48 @@ function checkPlayerCount() {
 		}
 	});
 	var players = Object.keys(socketLastSeen).length;
-	io.sockets.clients().forEach(function (socket) {
-		var shouldEmit = (players === 1 && socketLastSeen[socket.id]) || players > 1;
-		var isNonEmittedCount = !socket.lastPlayerCount || socket.lastPlayerCount !== players;
-		if (shouldEmit && isNonEmittedCount) {
-			socket.emit('players', players);
-			socket.lastPlayerCount = players;
-		}
+	io.clients(function(err, clients) {
+		clients.forEach(function (client) {
+			var shouldEmit = (players === 1 && socketLastSeen[client.id]) || players > 1;
+			var isNonEmittedCount = !client.lastPlayerCount || client.lastPlayerCount !== players;
+			if (shouldEmit && isNonEmittedCount) {
+				client.socket.emit('players', players);
+				client.lastPlayerCount = players;
+			}
+		});
 	});
 }
 
 var LATENCY = 300;
 
+function getLatency(){
+	return Math.round(LATENCY * (0.9 + 0.2 * Math.random()));
+}
+
 function emit(socket, type, msg) {
+	var latency = getLatency();
 	if (!process.env.PORT) {
-		msg.t += LATENCY / 2;
-		return setTimeout(emit, LATENCY);
+		msg.t += Math.round(latency / 2);
+		return setTimeout(emit, latency);
 	}
 	return emit();
 
 	function emit() {
+		!process.env.PORT && console.log('EMIT latency(%dms)', latency, type, msg);
 		socket.emit(type, msg);
 	}
 }
 
 function broadcast(type, msg) {
+	var latency = getLatency();
 	if (!process.env.PORT) {
-		msg.t += LATENCY / 2;
-		return setTimeout(emit, LATENCY);
+		msg.t += Math.round(latency / 2);
+		return setTimeout(emit, latency);
 	}
 	return emit();
 
 	function emit() {
+		!process.env.PORT && console.log('BROADCAST latency(%dms)', latency, type, msg);
 		io.emit(type, msg);
 	}
 }

@@ -11,3 +11,7 @@ var COLORS = [0x5856d6, 0xff2d55, 0x4cd964, 0x007aff, 0xff3b30, 0x5ac8fa, 0xffcc
 var VELOCITY = 0.0002;
 var PLAYER_TIMEOUT = 20 * 1000;
 var BACKGROUND_COLOR = 0x060606;
+var CIRCLE = 1;
+var TRIANGLE = 2;
+var SQUARE = 3;
+var COMPUTER_VIA_SERVER = true;
