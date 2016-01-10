@@ -11,8 +11,8 @@ function getInteraction(state, world) {
 	sprite.on('touchstart', onDown);
 	sprite.on('mousemove', onMove);
 	sprite.on('touchmove', onMove);
-	sprite.on('mouseup', onUp);
-	sprite.on('touchend', onUp);
+	sprite.on('mouseup', commitShape);
+	sprite.on('touchend', commitShape);
 	return sprite;
 
 	function onDown(e) {
@@ -28,7 +28,7 @@ function getInteraction(state, world) {
 		}
 		if (!state.newShape) {
 			state.newShape = {
-				type: CIRCLE,
+				type: state.nextShape,
 				id: Math.random() + '_' + Date.now(),
 				x: getX(e),
 				y: getY(e),
@@ -40,26 +40,12 @@ function getInteraction(state, world) {
 			world.stage.addChild(state.newShape.sprite);
 		} else {
 			world.stage.removeChild(state.newShape.sprite);
-			state.newShape.type = (state.newShape.type + 1) % 3;
+			state.newShape.type = (state.newShape.type + 1) % SHAPE_COUNT;
 			state.newShape.sprite = generateSpriteForShape(world, state.newShape);
 			state.newShape.sprite.alpha = UNCONFIRMED_ALPHA;
 			world.stage.addChild(state.newShape.sprite);
 		}
 		//newShapeEmitter(world, state);
-	}
-
-	function onUp() {
-		world.lastInteraction = Date.now();
-		if (!state.readyToPlay) {
-			return;
-		}
-		if (!state.playing && state.readyToPlay) {
-			resetGame(state, world);
-		}
-		if (state.timeout) {
-			clearTimeout(state.timeout);
-		}
-		state.timeout = setTimeout(commitShape, CLICK_WAIT);
 	}
 
 	function getX(e) {
@@ -78,6 +64,13 @@ function getInteraction(state, world) {
 	}
 
 	function commitShape() {
+		world.lastInteraction = Date.now();
+		if (!state.readyToPlay) {
+			return;
+		}
+		if (!state.playing && state.readyToPlay) {
+			resetGame(state, world);
+		}
 		if (!state.newShape) {
 			return;
 		}
@@ -107,5 +100,6 @@ function getInteraction(state, world) {
 			onShape(state, world, shape);
 			state.lastShape = shape;
 		}
+		state.nextShape = (state.nextShape+1) % SHAPE_COUNT;
 	}
 }

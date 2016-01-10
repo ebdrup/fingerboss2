@@ -1,6 +1,5 @@
 var SHAPE_SIZE = 0.05;
 var UNCONFIRMED_ALPHA = 0.7;
-var CLICK_WAIT = 150;
 var SCORE_FACTOR = 25;
 var WINNING_SCORE = 100;
 var COLORS = [0x5856d6, 0xff2d55, 0x4cd964, 0x007aff, 0xff3b30, 0x5ac8fa, 0xffcc00, 0x34aadc];//0x8e8e93
@@ -10,4 +9,5 @@ var BACKGROUND_COLOR = 0x060606;
 var CIRCLE = 0;
 var TRIANGLE = 1;
 var SQUARE = 2;
+var SHAPE_COUNT = 2;
 var COMPUTER_VIA_SERVER = true;

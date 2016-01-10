@@ -9,9 +9,8 @@ function resetGame(state, world) {
 	state.playing = true;
 	state.shrinkCount = 0;
 	state.killCount = 0;
-	if(state.timeout){
-		clearTimeout(state.timeout);
-	}
+	state.nextShape = CIRCLE;
+	state.nextComputerShape = CIRCLE;
 	TweenMax.killAll();
 	if (world.stage) {
 		for (var i = world.stage.children.length - 1; i >= 0; i--) {

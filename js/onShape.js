@@ -79,12 +79,13 @@ function onShape(state, world, s) {
 	state.shapes = state.shapes.filter(Boolean);
 	return;
 
-	function kills(type1, type2){
-		return !!{
-			'0':{ '1': true},
-			'1':{ '2': true},
-			'2':{ '0': true},
-		}[type1][type2];
+	function kills(type1, type2) {
+		return type1 === type2;
+		/*return !!{
+		 '0':{ '1': true},
+		 '1':{ '2': true},
+		 '2':{ '0': true},
+		 }[type1][type2];*/
 	}
 
 	function merge(state, s1, t) {
